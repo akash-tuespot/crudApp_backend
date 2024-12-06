@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.customexception.ProductNotFoundException;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.ProductDTO;
 import com.example.demo.repository.ProductRepository;
@@ -35,14 +36,14 @@ public class ProductServiceImpl implements ProductService {
 	 @Override
 	    public ProductDTO getProductById(Integer id) {
 	        Product product = productRepo.findById(id)
-	                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+	                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
 	        return mapToDto(product);
 	    }
 
 	    @Override
 	    public ProductDTO updateProduct(ProductDTO productDto, Integer id) {
 	        Product existingProduct = productRepo.findById(id)
-	                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+	                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
 
 	        existingProduct.setName(productDto.getName());
 	        existingProduct.setDescr(productDto.getDescr());
@@ -54,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
 	    @Override
 	    public Map<String, String> deleteProductById(Integer id) {
 	        Product product = productRepo.findById(id)
-	                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+	                .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
 	        productRepo.delete(product);
 
 	        Map<String, String> response = new HashMap<>();
